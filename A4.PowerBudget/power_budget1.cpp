@@ -55,6 +55,22 @@ class CLed : public CDevice
     int mBrightness;
 };
 
+// ---CHeater----------------------------------------------------------------------
+// A CHeater is a device whose power draw grows with its temperature setting
+// Created a new interface for the CHeater derived class
+class CHeater : public CDevice
+{
+  public:
+    CHeater( const std::string& aName);
+
+    void SetTemperature( int aTemperature );  // set the Heater's temperature
+    int PowerDraw();                          // power drawn, in watts
+
+    private:
+    int mTemperature;
+
+};
+
 //---main----------------------------------------------------------------------
 // Sets up a motor and an LED, then prints each device's power draw and the
 // running total.
@@ -67,6 +83,12 @@ int main()
   CLed statusLed( "StatusLed" );
   statusLed.SetBrightness( 50 );
 
+  // Instantiate an object of the CHeater class roomHeater
+  CHeater roomHeater( "RoomHeater" );
+  roomHeater.TurnOn();
+  roomHeater.SetTemperature(30);
+
+
   int total = 0;
 
   int motorDraw = driveMotor.PowerDraw();
@@ -76,6 +98,10 @@ int main()
   int ledDraw = statusLed.PowerDraw();
   std::cout << statusLed.GetName() << ": " << ledDraw << " W" << std::endl;
   total += ledDraw;
+  
+  int heaterDraw = roomHeater.PowerDraw();
+  std::cout << roomHeater.GetName() << ": " << heaterDraw << "W" << std::endl;
+  total += heaterDraw;
 
   std::cout << "Total: " << total << " W" << std::endl;
 
@@ -142,3 +168,23 @@ int CLed::PowerDraw()
 {
   return IsOn() ? mBrightness / 10 : 0;
 }
+
+//---CHeather Implementation-------------------------------------------------------
+// Created the CHeater Constructor to assign name and initial temperature to 0.
+CHeater::CHeater( const std::string& aName )
+  : CDevice( aName ),
+    mTemperature( 0 )
+{
+}
+//--- Set the Temperature for the heater.
+void CHeater::SetTemperature( int aTemperature )
+{
+  mTemperature = aTemperature;
+}
+//--- Set the power draw as a multiple of the set temperature.
+int CHeater::PowerDraw()
+{
+  return IsOn() ? mTemperature * 20 : 0;
+}
+
+
