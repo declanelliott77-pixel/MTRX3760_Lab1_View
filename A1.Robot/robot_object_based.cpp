@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 
+
 //--Consts---------------------------------------------------------------------
 const int NumCycles = 4;              // how many cycles the robot runs for
 const double BaseSpeed = 0.5;         // forward speed before steering is added
@@ -67,6 +68,23 @@ class CMotor
     std::string mName;      // the motor's label, e.g. "Left"
     double mSpeed;          // current speed, -1.0 to 1.0
 };
+//-- CBattery--------------------------------------------------------------------
+// A CBattery is a single battery with a label and a current charge level and loses charge every cycle.
+class CBattery{
+  
+  public:
+    // Creates a battery with the given label, fully charged.
+    CBattery( const std::string& aName );
+    // LoseCharge reduces the battery's charge level by 10% each cycle.
+    void LoseCharge();
+    // IsLow returns true if the battery is low on charge, ie below 80%.
+    int IsLow();
+
+  private:
+    std::string mName;      // the battery's label, e.g. "Battery"
+    double mCharge;          // current charge level, 0.0 to 1.0
+};
+
 
 //---CRobot--------------------------------------------------------------------
 // A CRobot has a line sensor, a controller, and two drive motors. It offers
@@ -88,6 +106,7 @@ class CRobot
     CController mController;
     CMotor mLeftMotor;
     CMotor mRightMotor;
+    CBattery mBattery;
 };
 
 //---main----------------------------------------------------------------------
@@ -153,20 +172,53 @@ void CMotor::Report()
   std::cout << mName << " motor " << mSpeed;
 }
 
+
+//---CBattery Implementation-----------------------------------------------------
+CBattery::CBattery( const std::string& aName ){
+  mName = aName;
+  mCharge = 1.0; // Fully charged
+}
+//---
+void CBattery::LoseCharge(){
+  mCharge -= 0.1; // Reduce charge by 10%
+  if(mCharge < 0.0){
+    mCharge = 0.0; // Ensure charge doesn't go below 0, not necessary for assignment but may be needed for A5.
+  }
+}
+//---
+int CBattery::IsLow()
+{
+  int Result;
+  if (mCharge < 0.8)
+  {
+    Result = 1;
+  }
+  else
+  {
+    Result = 0;
+  }
+  return Result;
+}
 //---CRobot Implementation-----------------------------------------------------
 CRobot::CRobot()
   : mLeftMotor( "Left" ),
-    mRightMotor( "Right" )
+    mRightMotor( "Right" ),
+    mBattery( "Battery" )
 {
 }
 //---
 void CRobot::Update()
 {
+  mBattery.LoseCharge(); // Reduce battery charge each cycle
   int error = mSensor.Read();
   double steering = mController.ComputeSteering( error );
+  double speed = BaseSpeed;
 
-  mLeftMotor.SetSpeed( BaseSpeed + steering );
-  mRightMotor.SetSpeed( BaseSpeed - steering );
+  if(mBattery.IsLow()){ 
+    speed = BaseSpeed * 0.5; // Reduce speed by 50% if battery is low, changing it from 0.5 to 0.25
+  }
+  mLeftMotor.SetSpeed(speed + steering );
+  mRightMotor.SetSpeed(speed - steering );
 }
 //---
 void CRobot::Report()
