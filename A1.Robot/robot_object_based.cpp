@@ -174,10 +174,12 @@ void CMotor::Report()
 
 
 //---CBattery Implementation-----------------------------------------------------
-CBattery::CBattery( const std::string& aName ){
+CBattery::CBattery( const std::string& aName )
   mName = aName;
   mCharge = 1.0; // Fully charged
-}
+  {  
+  }
+
 //---
 void CBattery::LoseCharge(){
   mCharge -= 0.1; // Reduce charge by 10%
