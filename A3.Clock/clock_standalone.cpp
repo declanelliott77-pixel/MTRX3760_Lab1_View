@@ -91,7 +91,7 @@ int main()
 
   // Create an alarm clock alongside the plain clock, set its alarm, and advance
   // it a minute at a time until it rings
-  CAlarmClock alarmClock( "Bedroom", 390 );    // 390 minutes = 06:30
+  CAlarmClock alarmClock( "Bedroom", 415  );    // 415 minutes = 06:55
   alarmClock.SetAlarm( 420 );                  // 420 minutes = 07:00
   while ( !alarmClock.CheckRinging() )
   {

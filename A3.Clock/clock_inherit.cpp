@@ -77,7 +77,7 @@ int main()
   clock.Tick();
   clock.Report();
 
-  CAlarmClock alarmClock( "Bedroom", 390 );    // 390 minutes = 06:30
+  CAlarmClock alarmClock( "Bedroom", 415 );    // 415 minutes = 06:55
   alarmClock.SetAlarm( 420 );                  // 420 minutes = 07:00
   while ( !alarmClock.CheckRinging() )
   {
