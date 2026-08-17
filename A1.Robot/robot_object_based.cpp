@@ -78,7 +78,7 @@ class CBattery{
     // LoseCharge reduces the battery's charge level by 10% each cycle.
     void LoseCharge();
     // IsLow returns true if the battery is low on charge, ie below 80%.
-    bool IsLow();
+    int IsLow();
 
   private:
     std::string mName;      // the battery's label, e.g. "Battery"
@@ -219,7 +219,7 @@ void CRobot::Update()
   }
   mLeftMotor.SetSpeed(speed + steering );
   mRightMotor.SetSpeed(speed - steering );
-  mBattery.LoseCharge(); // Reduce battery charge at the end of each cycle
+  mBattery.LoseCharge(); // Reduce battery charge at the end of each cycle, ie so robot is used and battery then drops.
 }
 //---
 void CRobot::Report()
