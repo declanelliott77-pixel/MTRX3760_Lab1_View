@@ -9,6 +9,7 @@
 //--Includes-------------------------------------------------------------------
 #include <iostream>
 #include <string>
+#include <cmath>
 
 //---COven---------------------------------------------------------------------
 // COven holds an oven's name and current temperature. Both members are public,
@@ -17,7 +18,7 @@ class COven
 {
   public:
     std::string mName;       // the oven's label, e.g. "Reflow oven"
-    int mTemperatureC;       // current temperature, in whole degrees Celsius
+    float mTemperatureC;       //  current temperature as a float to be stored in tenths of a degree
 };
 
 //---main----------------------------------------------------------------------
@@ -29,16 +30,18 @@ int main()
   COven ReflowOven;
   ReflowOven.mName = "Reflow oven";
   ReflowOven.mTemperatureC = 20;            // start at room temperature
+  ReflowOven.mTemperatureC = std::round( ReflowOven.mTemperatureC * 10 ) / 10 ;  // add this line to round to the tenth degree
 
   COven CuringOven;
   CuringOven.mName = "Curing oven";
   CuringOven.mTemperatureC = 20;            // start at room temperature
+  CuringOven.mTemperatureC = std::round( CuringOven.mTemperatureC * 10 ) / 10 ;  // added this line to round to the tenth degree
 
   for( int i = 0; i < 5; ++i )
-    ReflowOven.mTemperatureC += 1;          // warm up by one degree
+    ReflowOven.mTemperatureC = std::round( (ReflowOven.mTemperatureC + 1) * 10 ) / 10 ; // modified this line so that the increment is rounded to a tenth of a degree.
 
   for( int i = 0; i < 8; ++i )
-    CuringOven.mTemperatureC += 1;          // warm up by one degree
+    CuringOven.mTemperatureC = std::round( (CuringOven.mTemperatureC + 1) * 10 ) / 10 ; // modified this line so that the increment is rounded to a tenth of a degree.
 
   if( ReflowOven.mTemperatureC >= 250 )     // overheating limit is 250 C
     std::cout << "Warning: oven is overheating!" << std::endl;

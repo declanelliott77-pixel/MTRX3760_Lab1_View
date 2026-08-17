@@ -9,6 +9,7 @@
 //--Includes-------------------------------------------------------------------
 #include <iostream>
 #include <string>
+#include <cmath>
 
 //---COven---------------------------------------------------------------------
 // COven holds an oven's name and current temperature. The temperature is
@@ -30,8 +31,9 @@ class COven
 
   private:
     std::string mName;       // the oven's label, e.g. "Reflow oven"
-    int mTemperatureC;       // current temperature, in whole degrees Celsius
-};
+    float mTemperatureC;     // modified the temperature variable type to a float so 
+};                           // that it can be stored in tenths of a degree
+
 
 //---main----------------------------------------------------------------------
 // Sets up two ovens, warms each in steps, checks each for overheating, and
@@ -62,13 +64,13 @@ int main()
 //---COven Implementation------------------------------------------------------
 COven::COven( const std::string& aName )
   : mName( aName ),
-    mTemperatureC( 20 )                 // start at room temperature
+    mTemperatureC(  std::round(20  * 10 ) / 10 )                      // modified this line so that the initial temperature is set to the nearest tenth degree
 {
 }
 //---
 void COven::WarmUp()
 {
-  mTemperatureC += 1;                   // warm up by one degree
+  mTemperatureC = std::round( (mTemperatureC + 1) * 10 ) / 10 ;        // modified this line so that the increment is rounded to a tenth of a degree.
 }
 //---
 bool COven::IsOverheating()
