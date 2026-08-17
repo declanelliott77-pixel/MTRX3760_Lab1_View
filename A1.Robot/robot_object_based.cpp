@@ -4,7 +4,7 @@
 // its line sensor, works out how hard to steer, and sets its two drive motors.
 // Each part of the robot is a class, and a CRobot holds those parts and puts
 // them to work.
-//
+
 // Copyright (c) Donald Dansereau, 2026
 
 //--Includes-------------------------------------------------------------------
@@ -78,7 +78,7 @@ class CBattery{
     // LoseCharge reduces the battery's charge level by 10% each cycle.
     void LoseCharge();
     // IsLow returns true if the battery is low on charge, ie below 80%.
-    int IsLow();
+    bool IsLow();
 
   private:
     std::string mName;      // the battery's label, e.g. "Battery"
@@ -209,7 +209,7 @@ CRobot::CRobot()
 //---
 void CRobot::Update()
 {
-  mBattery.LoseCharge(); // Reduce battery charge each cycle
+  
   int error = mSensor.Read();
   double steering = mController.ComputeSteering( error );
   double speed = BaseSpeed;
@@ -219,6 +219,7 @@ void CRobot::Update()
   }
   mLeftMotor.SetSpeed(speed + steering );
   mRightMotor.SetSpeed(speed - steering );
+  mBattery.LoseCharge(); // Reduce battery charge at the end of each cycle
 }
 //---
 void CRobot::Report()
